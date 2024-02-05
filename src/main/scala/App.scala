@@ -212,7 +212,11 @@ object App {
                     panelBusquedaTB.layout(txtContent(sttsGls, lblText.text)) = Center
                     panelBusquedaTB.layout(imagen("D:\\GxT.png")) = East
                   case "Alineaciones" =>
-                    panelBusquedaTB.layout(txtContent("Sin data", lblText.text)) = Center
+                    val sttsAlg = ImportadorDatos.stattsPlayerAlignments()
+                      .map(x => "Numero Jugadores X Alineacion: \n"+ "\tTorneo: " + x._1 + "\n\tEquipo: " + x._2 + "\n\tJugador: " + x._3 + "\n")
+                      .mkString
+                    panelBusquedaTB.layout(txtContent(sttsAlg, lblText.text)) = Center
+                    panelBusquedaTB.layout(imagen("D:\\PxA.png")) = East
                 }
             }
             layout(btnQuerie) = East

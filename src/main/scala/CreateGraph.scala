@@ -31,6 +31,7 @@ object CreateGraph {
     chartBarPlotStadium()
     chartBarTeamsGenre()
     chartBarWTournaments()
+    chartBarPstXAlignment()
   }
 
   //Tabla Goles
@@ -133,6 +134,24 @@ object CreateGraph {
 
     pngToFile(new File("D:\\WxT.png"), bar1.build, 400)
 
+  def chartBarPstXAlignment() =
+    val data4Chart = ImportadorDatos.stattsPositionXAlignment()
+
+    val indices = Index(data4Chart.map(value => value._1).toArray)
+    val values = Vec(data4Chart.map(value => value._2).toArray)
+
+    val series = Series(indices, values)
+
+    val bar1 = saddle.barplotHorizontal(series,
+      xLabFontSize = Option(RelFontSize(0.6)),
+      color = RedBlue(data4Chart.map(_._2).min, data4Chart.map(_._2).max))(par
+      .xlab("Position")
+      .ylab("Quantity.")
+      .xLabelRotation(-77)
+      .xNumTicks(0)
+      .main("Common Position"))
+
+    pngToFile(new File("D:\\PxA.png"), bar1.build, 400)
 
   //Tabla Jugadores
   def chartting(data: List[Map[String, String]]): Unit = {
