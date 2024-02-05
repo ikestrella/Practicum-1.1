@@ -24,7 +24,7 @@ object CreateGraph {
     val contentFile2: List[Map[String, String]] = reader2.allWithHeaders()
     reader2.close()
 
-    charting(contentFile)
+    chartingGxMinute(contentFile)
     chartBarPlot(datosGraficaM(contentFile))
     chartting(contentFile2)
 
@@ -35,19 +35,28 @@ object CreateGraph {
   }
 
   //Tabla Goles
-  def charting(data: List[Map[String, String]]): Unit = {
-    val listNroShirt: List[Double] = data
+  def chartingGxMinute(data: List[Map[String, String]]): Unit = {
+    val data4Chart= data
       .filter(row => row("goals_minute_regulation") != "NA")
-      .map(row => row("goals_minute_regulation").toDouble)
+      .map(row => (row("goals_minute_regulation").toDouble, row("goals_goal_id")))
+      .map(x => x._1 -> x._2)
+      .groupBy(_._1)
+      .map(x => (x._1.toString, x._2.length.toDouble))
 
-    val histForwardShirtNumber = xyplot(HistogramData(listNroShirt, 20) -> bar())(
-      par
-        .xlab("Minutos")
-        .ylab("frecuencia")
-        .main("Goles por minuto")
-    )
-    pngToFile(new File("D:\\GxP.png"), histForwardShirtNumber.build, 400)
-    renderToByteArray(histForwardShirtNumber.build, width = 400)
+    val indices = Index(data4Chart.map(value => value._1).toArray) //con esta funcion se obtiene las 4 primeras letras de la lista de tuplas
+    val values = Vec(data4Chart.map(value => value._2).toArray)
+
+    val series = Series(indices, values)
+
+    val bar1 = saddle.barplotHorizontal(series,
+      xLabFontSize = Option(RelFontSize(0.2)),
+      color = RedBlue(86, 186))(par //enviamos los valores enviados cambia de color - Azul para el menor - Rojo para el mayor
+      .xlab("Minuto")
+      .ylab("freq.")
+      .xLabelRotation(-77)
+      .xNumTicks(0)
+      .main("Goles por Minuto"))
+    pngToFile(new File("D:\\GxP.png"), bar1.build, 400)
   }
 
 
