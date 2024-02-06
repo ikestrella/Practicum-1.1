@@ -145,7 +145,7 @@ object ImportadorDatos {
       .transact(xa)
       .unsafeRunSync()
 
-  def stattsPlayerAlignments()=
+  def stattsPlayerAlignments() =
     sql"""SELECT squads_tournament_id, squads_team_id, COUNT(*) AS tournament_team_players_count
           FROM alignments
           GROUP BY squads_tournament_id, squads_team_id
@@ -181,11 +181,12 @@ object ImportadorDatos {
       .transact(xa)
       .unsafeRunSync()
 
-  def stattsPositionXAlignment(): List[(String, Double)] =
-    sql"""SELECT squads_position_name, COUNT(*) AS position_count
-          FROM alignments
-          GROUP BY squads_position_name
-          ORDER BY position_count DESC;""".query[(String, Double)]
+  def stattsGenreWandM(): List[(String, Double)] =
+    sql"""SELECT "Mujeres", SUM(players_female)
+         |FROM players
+         |UNION
+         |SELECT "Hombres", COUNT(players_female) - SUM(players_female)
+         |FROM players;""".stripMargin.query[(String, Double)]
       .to[List]
       .transact(xa)
       .unsafeRunSync()
