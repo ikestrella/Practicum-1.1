@@ -46,10 +46,6 @@ object InsertarDT {
     generateDataGoals(contentFilePyG)
       .foreach(insert => insert.run.transact(xa).unsafeRunSync())
 
-  def generateDataBase(): Unit = {
-
-  }
-
   def generateDataPlayers(data: List[Map[String, String]]): List[doobie.Update0] =
     val playerTuple = data
       .map(

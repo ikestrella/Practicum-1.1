@@ -258,7 +258,7 @@ object App {
 
                 // Limpia Contenido Del Panel Tablas
                 panelTablasBusqueda.contents.clear()
-                
+
                 lblText.text match
                   case "Equipos" =>
                     val tabsTablas: TabbedPane = new TabbedPane {
