@@ -1,7 +1,6 @@
 import cats.*
 import cats.effect.*
 import cats.effect.unsafe.implicits.global
-import cats.implicits.*
 import com.github.tototoshi.csv.*
 import doobie.*
 import doobie.implicits.*
@@ -47,6 +46,9 @@ object InsertarDT {
     generateDataGoals(contentFilePyG)
       .foreach(insert => insert.run.transact(xa).unsafeRunSync())
 
+  def generateDataBase(): Unit = {
+
+  }
 
   def generateDataPlayers(data: List[Map[String, String]]): List[doobie.Update0] =
     val playerTuple = data

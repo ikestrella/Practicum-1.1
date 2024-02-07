@@ -39,22 +39,18 @@ object CreateGraph {
       .map(row => (row("goals_minute_regulation").toDouble, row("goals_goal_id")))
       .map(x => x._1 -> x._2)
       .groupBy(_._1)
-      .map(x => (x._1.toString, x._2.length.toDouble))
+      .map(x => (x._1.toDouble, x._2.length.toDouble))
+      .toIndexedSeq
 
-    val indices = Index(data4Chart.map(value => value._1).toArray)
-    val values = Vec(data4Chart.map(value => value._2).toArray)
-
-    val series = Series(indices, values)
-
-    val bar1 = saddle.barplotHorizontal(series,
-      xLabFontSize = Option(RelFontSize(0.2)),
-      color = RedBlue(86, 186))(par
-      .xlab("Minuto")
-      .ylab("freq.")
-      .xLabelRotation(-77)
-      .xNumTicks(0)
-      .main("Goles por Minuto"))
-    pngToFile(new File("D:\\GxP.png"), bar1.build, 400)
+    val plot = xyplot(data4Chart)(
+      par
+        .xlab("Minuto")
+        .ylab("freq.")
+        .xLabelRotation(-77)
+        .main("Goles por Minuto")
+    )
+    
+    pngToFile(new File("D:\\GxP.png"), plot.build, 400)
   }
 
 
@@ -74,7 +70,7 @@ object CreateGraph {
       .toList
       .sortBy(_._1)
 
-    val indices = Index(data4Chart.map(value => value._1).toArray) 
+    val indices = Index(data4Chart.map(value => value._1.substring(0,4)).toArray) 
     val values = Vec(data4Chart.map(value => value._2).toArray)
 
     val series = Series(indices, values)

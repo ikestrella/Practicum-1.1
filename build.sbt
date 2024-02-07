@@ -15,5 +15,4 @@ lazy val root = (project in file("."))
       "com.mysql"               % "mysql-connector-j" % "8.2.0",
       "org.scala-lang.modules" %% "scala-swing"       % "3.0.0"
     )
-
   )

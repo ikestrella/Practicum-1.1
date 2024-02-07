@@ -145,7 +145,7 @@ object ImportadorDatos {
       .transact(xa)
       .unsafeRunSync()
 
-  def stattsPlayerAlignments() =
+  def stattsPlayerAlignments(): Array[(String, String, Int)] =
     sql"""SELECT squads_tournament_id, squads_team_id, COUNT(*) AS tournament_team_players_count
           FROM alignments
           GROUP BY squads_tournament_id, squads_team_id

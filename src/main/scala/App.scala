@@ -213,7 +213,7 @@ object App {
                     panelBusquedaTB.layout(imagen("D:\\GxT.png")) = East
                   case "Alineaciones" =>
                     val sttsAlg = ImportadorDatos.stattsPlayerAlignments()
-                      .map(x => "Numero Jugadores X Alineacion: \n"+ "\tTorneo: " + x._1 + "\n\tEquipo: " + x._2 + "\n\tJugador: " + x._3 + "\n")
+                      .map(x => "Numero Jugadores X Alineacion: \n"+ "\tTorneo: " + x._1 + "\n\tEquipo: " + x._2 + "\n\tJugadores: " + x._3 + "\n")
                       .mkString
                     panelBusquedaTB.layout(txtContent(sttsAlg, lblText.text)) = Center
                     panelBusquedaTB.layout(imagen("D:\\PxA.png")) = East
@@ -258,6 +258,7 @@ object App {
 
                 // Limpia Contenido Del Panel Tablas
                 panelTablasBusqueda.contents.clear()
+                
                 lblText.text match
                   case "Equipos" =>
                     val tabsTablas: TabbedPane = new TabbedPane {
