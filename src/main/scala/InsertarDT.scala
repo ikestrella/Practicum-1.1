@@ -220,7 +220,7 @@ object InsertarDT {
   def generateScriptTournaments(data: List[Map[String, String]]) =
     val sqlInsert = s" INSERT INTO tournaments(matches_tournament_id, tournaments_tournament_name, " +
       s"tournaments_year, tournaments_host_country, tournaments_winner, tournaments_count_teams) " +
-      s"VALUES('%s', '%s', '%s', '%s', '%s', %d)"
+      s"VALUES('%s', '%s', '%s', '%s', '%s', %d);"
     val alignmentTuple = data
       .map(
         row => (row("matches_tournament_id"),
