@@ -49,7 +49,7 @@ object CreateGraph {
         .xLabelRotation(-77)
         .main("Goles por Minuto")
     )
-    
+
     pngToFile(new File("D:\\GxP.png"), plot.build, 400)
   }
 
@@ -70,7 +70,7 @@ object CreateGraph {
       .toList
       .sortBy(_._1)
 
-    val indices = Index(data4Chart.map(value => value._1.substring(0,4)).toArray) 
+    val indices = Index(data4Chart.map(value => value._1.substring(0,4)).toArray)
     val values = Vec(data4Chart.map(value => value._2).toArray)
 
     val series = Series(indices, values)

@@ -46,6 +46,12 @@ object InsertarDT {
     generateDataGoals(contentFilePyG)
       .foreach(insert => insert.run.transact(xa).unsafeRunSync())
 
+    generateScriptAlignments(contentFileAxT)
+    generateScriptTournaments(contentFilePyG)
+
+
+
+
   def generateDataPlayers(data: List[Map[String, String]]): List[doobie.Update0] =
     val playerTuple = data
       .map(
@@ -141,6 +147,9 @@ object InsertarDT {
     alignmentTuple
 
 
+
+
+
   def generateDataStadiums(data: List[Map[String, String]]): List[doobie.Update0] =
     val stadiumTuple = data
       .map(
@@ -191,4 +200,37 @@ object InsertarDT {
                VALUES(${t7._1}, ${t7._2}, ${t7._3}, ${t7._4}, ${t7._5},${t7._6})
            """.update)
     tournamentsTuple
+
+
+  def generateScriptAlignments(data: List[Map[String, String]]) =
+    val sqlInsert = s"INSERT INTO alignments(squads_player_id, squads_position_name, squads_shirt_number, squads_team_id, squads_tournament_id)" +
+      s" VALUES ('%s', '%s', %d, '%s', '%s');"
+    val alignmentTuple = data
+      .map(
+        row => (row("squads_player_id"),
+          row("squads_position_name"),
+          row("squads_shirt_number").toInt,
+          row("squads_team_id"),
+          row("squads_tournament_id"))
+      )
+      .distinct
+      .map(t => sqlInsert.formatLocal(java.util.Locale.US, t._1, t._2, t._3, t._4, t._5))
+    alignmentTuple.foreach(println)
+
+  def generateScriptTournaments(data: List[Map[String, String]]) =
+    val sqlInsert = s" INSERT INTO tournaments(matches_tournament_id, tournaments_tournament_name, " +
+      s"tournaments_year, tournaments_host_country, tournaments_winner, tournaments_count_teams) " +
+      s"VALUES('%s', '%s', '%s', '%s', '%s', %d)"
+    val alignmentTuple = data
+      .map(
+        row => (row("matches_tournament_id"),
+          row("tournaments_tournament_name"),
+          row("tournaments_year"),
+          row("tournaments_host_country"),
+          row("tournaments_winner"),
+          row("tournaments_count_teams").toInt)
+      )
+      .distinct
+      .map(t => sqlInsert.formatLocal(java.util.Locale.US, t._1, t._2, t._3, t._4, t._5, t._6))
+    alignmentTuple.foreach(println)
 }
