@@ -31,6 +31,21 @@ object App {
   val headersTournaments: Array[String] = Array("ID Torneo", "Nombre Torneo", "Año", "P.Anfitrion", "Ganador", "C.Equipos")
   val modelBDTournaments: Array[(String, String, String, String, String, String)] = ImportadorDatos.obtenerTorneos()
 
+  // Obtener Media Mediana Moda
+  def mediaMedianaModa(datos: List[Double]): (Double, Double, Double) = {
+    val media = datos.sum / datos.length
+    val mediana = datos.length match {
+      case len if len % 2 == 0 =>
+        val sortedDatos = datos.sorted
+        val mid = len / 2
+        (sortedDatos(mid - 1) + sortedDatos(mid)) / 2.0
+      case len =>
+        val sortedDatos = datos.sorted
+        sortedDatos(len / 2)
+    }
+    val moda = datos.groupBy(identity).map(x => x._1 -> x._2.length).maxBy(_._2)._1
+    (media, mediana, moda)
+  }
 
   // Panel principal
   val panelPrincipal: BorderPanel = new BorderPanel {
@@ -173,6 +188,7 @@ object App {
                 panelBusquedaTB.layout.clear()
                 ventanaSecundaria
                 lblText.text match {
+
                   case "Jugadores" =>
                     val sttsPly: String = ImportadorDatos.statsJugadores()
                       .map(x => "Cantidad Jugadores: " + x._1 + "\nMujeres: " + x._2 + "\nHombres: " + x._3 + "\nArqueros: " + x._4 + "\nDefensas: " + x._5 + "\nCentroCampistas: " + x._6 + "\nDelanteros: " + x._7)
@@ -194,23 +210,27 @@ object App {
                     panelBusquedaTB.layout(imagen("D:\\T-Gnr.png")) = East
 
                   case "Estadios" =>
+                    val mmmCapacidad = mediaMedianaModa(modelBDStadiums.map(_._5.toDouble).toList)
                     val sttsEstd: String = ImportadorDatos.statsEstadios()
-                      .map(x => "Cantidad Estadios: " + x._1 + "\nPromedio Capacidad de Estadios: " + x._2 + "\nCantidad Maxima: " + x._3 + "\nCantidad Minima: " + x._4)
+                      .map(x =>"Media Capacidad: " + mmmCapacidad._1 + "\nMediana Capacidad: " + mmmCapacidad._2 +"\nModa Capacidad: " + mmmCapacidad._3 +"\nCantidad Estadios: " + x._1 + "\nPromedio Capacidad de Estadios: " + x._2 + "\nCantidad Maxima: " + x._3 + "\nCantidad Minima: " + x._4)
                       .mkString
                     panelBusquedaTB.layout(txtContent(sttsEstd, lblText.text)) = Center
                     panelBusquedaTB.layout(imagen("D:\\GxS.png")) = East
                   case "Partidos" =>
+                    val mmmGoles = mediaMedianaModa(modelTBMatches.map(_._9.toDouble).toList)
                     val sttsPtd: String = ImportadorDatos.statsPartidos()
-                      .map(x => "Cantidad Partidos: " + x._1 + "\nCantidad Equipos Visitantes: " + x._2 + "\nCantidad Equipos Locales: " + x._3 + "\nCantidad Estadios: " + x._4 + "\nPartidos Terminados Por Tanda Penales: " + x._5 + "\nGoles Por Penal Locales: " + x._6 + "\nGoles Por Penal Visitantes: " + x._7 + "\nGoles Totales: " + x._8 + "\nGoles Por Penal: " + x._9)
+                      .map(x => "Media Goles: " + mmmGoles._1 + "\nMediana Goles: " + mmmGoles._2 + "\nModa Goles: " + mmmGoles._3 + "\nCantidad Partidos: " + x._1 + "\nCantidad Equipos Visitantes: " + x._2 + "\nCantidad Equipos Locales: " + x._3 + "\nCantidad Estadios: " + x._4 + "\nPartidos Terminados Por Tanda Penales: " + x._5 + "\nGoles Por Penal Locales: " + x._6 + "\nGoles Por Penal Visitantes: " + x._7 + "\nGoles Totales: " + x._8 + "\nGoles Por Penal: " + x._9)
                       .mkString
                     panelBusquedaTB.layout(txtContent(sttsPtd, lblText.text)) = Center
-                    panelBusquedaTB.layout(imagen("D:\\GxP.png")) = East
+                    panelBusquedaTB.layout(imagen("D:\\GxT.png")) = East
                   case "Goles" =>
+                    val mmmMinutos = mediaMedianaModa(modelTBGoals.map(_._7.toDouble).toList)
                     val sttsGls: String = ImportadorDatos.statsGoles()
-                      .map(x => "Cantidad Goles: " + x._1 + "\nJugadores Con Goles: " + x._2 + "\nCantidad Torneos: " + x._3 + "\nCantidad Partidos: " + x._4 + "\nGoles En Propia: " + x._5 + "\nGoles Totales Por Penal: " + x._6)
+                      .map(x => "Media Minutos: " + mmmMinutos._1 + "\nMediana Minutos: " + mmmMinutos._2 +"\nModa Minutos: " + mmmMinutos._3 +"\nCantidad Goles: " + x._1 + "\nJugadores Con Goles: " + x._2 + "\nCantidad Torneos: " + x._3 + "\nCantidad Partidos: " + x._4 + "\nGoles En Propia: " + x._5 + "\nGoles Totales Por Penal: " + x._6)
                       .mkString
                     panelBusquedaTB.layout(txtContent(sttsGls, lblText.text)) = Center
-                    panelBusquedaTB.layout(imagen("D:\\GxT.png")) = East
+                    panelBusquedaTB.layout(imagen("D:\\GxP.png")) = East
+
                   case "Alineaciones" =>
                     val sttsAlg = ImportadorDatos.stattsPlayerAlignments()
                       .map(x => "Numero Jugadores X Alineacion: \n"+ "\tTorneo: " + x._1 + "\n\tEquipo: " + x._2 + "\n\tJugadores: " + x._3 + "\n")
