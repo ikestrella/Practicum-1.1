@@ -345,23 +345,40 @@ object App {
                         x._2.toLowerCase.equals(idTorneo)
                     ).map(_._3).toList
 
-                    val tabsTablas: TabbedPane = new TabbedPane {
-                      pages += new Page("Alineacion", new ScrollPane(new Table(
-                        modelTBAlignements.filter(x =>
-                          x._1.toLowerCase.equals(idEquipo) &&
-                            x._2.toLowerCase.equals(idTorneo)
-                        ).map(x => Array[Any](x._1, x._2, x._3, x._4, x._5)), headersAlignaments)))
-                      pages += new Page("Equipo", new ScrollPane(new Table(modelBDTeams.filter(_._1.toLowerCase.equals(idEquipo.toLowerCase)).map(x => Array[Any](x._1, x._2, x._3, x._4, x._5)), headersTeams)))
-                      pages += new Page("Torneo", new ScrollPane(new Table(
-                        modelBDTournaments.filter(_._1.toLowerCase.equals(idTorneo.toLowerCase)
-                        ).map(x => Array[Any](x._1, x._2, x._3, x._4, x._5, x._6)), headersTournaments)))
-                      pages += new Page("Gol", new ScrollPane(new Table(modelTBGoals.filter(x => idJugadores.contains(x._3)).map(x => Array[Any](x._1, x._2, x._3, x._4, x._5, x._6, x._7, x._8, x._9, x._10, x._11)), headersGoals)))
-                    }
-                    txtID.text = ""
-                    panelTablasBusqueda.contents += tabsTablas
-                    panelTablasBusqueda.revalidate()
-                    panelTablasBusqueda.repaint()
+                    val idMatches = modelTBMatches
+                      .filter(x =>
+                        x._3.toLowerCase.equals(idEquipo.toLowerCase) ||
+                          x._4.toLowerCase.equals(idEquipo.toLowerCase) &&
+                            x._2.toLowerCase.equals(idTorneo.toLowerCase)
+                      ).map(_._1).toList
 
+
+                    if (idMatches.isEmpty || idEquipo.isEmpty){}
+                    else{
+                      val tabsTablas: TabbedPane = new TabbedPane {
+                        pages += new Page("Alineacion", new ScrollPane(new Table(
+                          modelTBAlignements.filter(x =>
+                            x._1.toLowerCase.equals(idEquipo) &&
+                              x._2.toLowerCase.equals(idTorneo)
+                          ).map(x => Array[Any](x._1, x._2, x._3, x._4, x._5)), headersAlignaments)))
+                        pages += new Page("Equipo", new ScrollPane(new Table(
+                          modelBDTeams.filter(_._1.toLowerCase.equals(idEquipo.toLowerCase))
+                            .map(x => Array[Any](x._1, x._2, x._3, x._4, x._5)), headersTeams)))
+                        pages += new Page("Torneo", new ScrollPane(new Table(
+                          modelBDTournaments.filter(_._1.toLowerCase.equals(idTorneo.toLowerCase))
+                            .map(x => Array[Any](x._1, x._2, x._3, x._4, x._5, x._6)), headersTournaments)))
+                        pages += new Page("Gol", new ScrollPane(new Table(
+                          modelTBGoals.filter(x => idJugadores.contains(x._3))
+                            .map(x => Array[Any](x._1, x._2, x._3, x._4, x._5, x._6, x._7, x._8, x._9, x._10, x._11)), headersGoals)))
+                        pages += new Page("Partidos", new ScrollPane(new Table(
+                          modelTBMatches.filter(x => idMatches.contains(x._1))
+                            .map(x => Array[Any](x._1, x._2, x._3, x._4, x._5, x._6, x._7, x._8, x._9, x._10, x._11, x._12, x._13, x._14, x._15)), headersMatches)))
+                      }
+                      txtID.text = ""
+                      panelTablasBusqueda.contents += tabsTablas
+                      panelTablasBusqueda.revalidate()
+                      panelTablasBusqueda.repaint()
+                    }
 
                   case "Torneos" =>
                     val tabsTablas: TabbedPane = new TabbedPane {
