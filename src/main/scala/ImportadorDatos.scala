@@ -67,7 +67,7 @@ object ImportadorDatos {
   def statsJugadores(): Array[(String, String, String, String, String, String, String)] =
     sql"""SELECT COUNT(player_id),
           SUM(players_female ),
-          COUNT(player_id)-SUM(players_female),
+          COUNT(player_id) -SUM(players_female),
           SUM(players_goal_keeper),
           SUM(players_defender),
           SUM(players_midfielder),
